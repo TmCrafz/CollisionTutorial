@@ -128,7 +128,7 @@ public class Game extends AnimationTimer {
 	private boolean isColliding(Circle objA, Circle objB) {		
 		Vector2f positionA = objA.getPosition();
 		Vector2f positionB = objB.getPosition();
-		// Ermittel den Richtungsvektor zwischen Circle B und Circle A
+		// Ermittel den Richtungsvektor zwischen Kreis B und Kreis A
 		Vector2f distanceVec = positionA.subtract(positionB);
 		// Ermittel die länge des Richtungsvektors. Die länge ist der Abstand zwischen den beiden Kreis Mittelpukten
 		float distance = distanceVec.length();
