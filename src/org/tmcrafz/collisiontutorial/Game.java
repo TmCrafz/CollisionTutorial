@@ -57,33 +57,35 @@ public class Game extends AnimationTimer {
 	
 	private Scene m_scene;
 	private GraphicsContext m_graphicsContext;
-	private Font m_font;	
+	private Font m_font;
+	private Font m_fontCollision;
 	private Rectangle2D m_rect;
 	
 	private int m_width;
 	private int m_height;
 	private long startTime;
 	
-	ArrayList<String> m_input;
+	private ArrayList<String> m_input;
 	
 	private Vector2f m_mousePos;
 	private float m_fps;
 	
-	CollisionObject m_playersObject;
-	ArrayList<CollisionObject> m_worldObjects;
+	private CollisionObject m_playersObject;
+	private ArrayList<CollisionObject> m_worldObjects;
+	private boolean m_isCollision;
 	
 	public Game(Scene scene, GraphicsContext graphicsContext, int width, int height) {
 		m_scene = scene;
 		m_graphicsContext = graphicsContext;
 		m_font = Font.font("Arial", FontWeight.BOLD, 12);		
+		m_fontCollision = Font.font("Arial", FontWeight.BOLD, 20);
 		m_rect = new Rectangle2D(width / 2.0, height / 2.0, 40, 30);
 		
 		m_width = width;
 		m_height = height;
 		m_input = new ArrayList<String>();
 		
-		m_mousePos = new Vector2f(0.f, 0.f);
-		
+		m_mousePos = new Vector2f(0.f, 0.f);		
 		
 		m_scene.setOnMouseMoved(new EventHandler<MouseEvent>() {
 			@Override
@@ -123,12 +125,21 @@ public class Game extends AnimationTimer {
 		m_worldObjects = new ArrayList<CollisionObject>();
 		m_playersObject = new Circle(80.f, m_width / 2.f, m_height / 2.f);
 		m_worldObjects.add(new Circle(60.f, m_width / 2.f - 60.f, m_height / 2.f + 120.f));
-		m_worldObjects.add(m_playersObject);
-		
+		m_worldObjects.add(m_playersObject);		
 	}
 	
 	private boolean isColliding(Circle objA, Circle objB) {		
-		
+		Vector2f positionA = objA.getPosition();
+		Vector2f positionB = objB.getPosition();
+		// Get the distance vector between Cirlce A and Cirlce B
+		Vector2f distanceVec = positionA.subtract(positionB);
+		// Get the length of the Vector
+		float distance = distanceVec.length();
+		// Check if the distance between CirlceA and B is smaller then the sum of the radi of both
+		// When it is so, there is collision
+		if (distance < objA.getRadius() + objB.getRadius()) {
+			return true;
+		}		
 		return false;
 	} 
 	
@@ -137,7 +148,7 @@ public class Game extends AnimationTimer {
 		start();		
 	}
 	
-	private void update(float dt) {
+	private void update(float dt) {		
 		/*
 		if (m_input.contains("D")) {
 			m_posX += (m_velX * dt);
@@ -154,10 +165,15 @@ public class Game extends AnimationTimer {
 		*/
 		m_playersObject.setPosition(m_mousePos.x, m_mousePos.y);
 		// Check if there is a collision
+		m_isCollision = false;
 		for (CollisionObject objA : m_worldObjects) {
 			for (CollisionObject objB : m_worldObjects) {
-				if (objA instanceof Circle && objB instanceof Circle) {
-					isColliding((Circle) objA, (Circle) objB);
+				// Only check for collision when both objects ar enot the same
+				if (objA instanceof Circle && objB instanceof Circle && objA != objB) {
+					if (isColliding((Circle) objA, (Circle) objB)) {
+						m_isCollision = true;
+						System.out.println("Colliding");
+					}
 				}				
 			}	
 		}	
@@ -166,15 +182,21 @@ public class Game extends AnimationTimer {
 	
 	private void render(float dt) {
 		m_graphicsContext.clearRect(0, 0, m_width, m_height);				
-		//m_graphicsContext.fillRect(m_rect.getMinX(), m_rect.getMinY(), m_rect.getWidth(), m_rect.getHeight());		
-		m_graphicsContext.setFill(Color.RED);
-		m_graphicsContext.setFont(m_font);
-		
+		//m_graphicsContext.fillRect(m_rect.getMinX(), m_rect.getMinY(), m_rect.getWidth(), m_rect.getHeight());
+				
 		for (CollisionObject worldObj : m_worldObjects) {
 			worldObj.draw(m_graphicsContext);
-		}				
-		m_graphicsContext.fillText("DET: " + dt, 10, 10);
-		m_graphicsContext.fillText("FPS: " + m_fps, 10, 20);
+		}
+		
+		if (m_isCollision) {
+			m_graphicsContext.setFill(Color.RED);
+			m_graphicsContext.setFont(m_fontCollision);
+			m_graphicsContext.fillText("COLLISION", m_width / 2 - 60, m_height - 10);
+		}
+		m_graphicsContext.setFont(m_font);
+		m_graphicsContext.setFill(Color.BLACK);
+		m_graphicsContext.fillText("DET: " + dt, 5, 10);
+		m_graphicsContext.fillText("FPS: " + m_fps, 5, 20);
 	}
 	
 	// Gameloop
