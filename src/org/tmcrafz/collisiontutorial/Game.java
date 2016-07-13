@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
@@ -59,7 +58,6 @@ public class Game extends AnimationTimer {
 	private GraphicsContext m_graphicsContext;
 	private Font m_font;
 	private Font m_fontCollision;
-	private Rectangle2D m_rect;
 	
 	private int m_width;
 	private int m_height;
@@ -79,7 +77,6 @@ public class Game extends AnimationTimer {
 		m_graphicsContext = graphicsContext;
 		m_font = Font.font("Arial", FontWeight.BOLD, 12);		
 		m_fontCollision = Font.font("Arial", FontWeight.BOLD, 20);
-		m_rect = new Rectangle2D(width / 2.0, height / 2.0, 40, 30);
 		
 		m_width = width;
 		m_height = height;
@@ -131,12 +128,12 @@ public class Game extends AnimationTimer {
 	private boolean isColliding(Circle objA, Circle objB) {		
 		Vector2f positionA = objA.getPosition();
 		Vector2f positionB = objB.getPosition();
-		// Get the distance vector between Cirlce A and Cirlce B
+		// Ermittel den Richtungsvektor zwischen Circle B und Circle A
 		Vector2f distanceVec = positionA.subtract(positionB);
-		// Get the length of the Vector
+		// Ermittel die länge des Richtungsvektors. Die länge ist der Abstand zwischen den beiden Kreis Mittelpukten
 		float distance = distanceVec.length();
-		// Check if the distance between CirlceA and B is smaller then the sum of the radi of both
-		// When it is so, there is collision
+		// Wenn der gerade ermittelte Abstand kleiner ist als die Summer der beiden Radi der Kreise,
+		// liegt eine Kollision vor		
 		if (distance < objA.getRadius() + objB.getRadius()) {
 			return true;
 		}		
@@ -164,12 +161,12 @@ public class Game extends AnimationTimer {
 		}
 		*/
 		m_playersObject.setPosition(m_mousePos.x, m_mousePos.y);
-		// Check if there is a collision
+		// Prüfe ob eine Kollision statt findet
 		m_isCollision = false;
 		for (CollisionObject objA : m_worldObjects) {
 			for (CollisionObject objB : m_worldObjects) {
-				// Only check for collision when both objects ar enot the same
-				if (objA instanceof Circle && objB instanceof Circle && objA != objB) {
+				// Prüfe nur wenn es sich nicht um die selben Objekte handelt
+				if (objA != objB && objA instanceof Circle && objB instanceof Circle) {
 					if (isColliding((Circle) objA, (Circle) objB)) {
 						m_isCollision = true;
 						System.out.println("Colliding");
