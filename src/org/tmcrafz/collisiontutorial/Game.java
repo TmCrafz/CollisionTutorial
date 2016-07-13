@@ -130,10 +130,11 @@ public class Game extends AnimationTimer {
 		Vector2f positionB = objB.getPosition();
 		// Ermittel den Richtungsvektor zwischen Kreis B und Kreis A
 		Vector2f distanceVec = positionA.subtract(positionB);
-		// Ermittel die länge des Richtungsvektors. Die länge ist der Abstand zwischen den beiden Kreis Mittelpukten
+		// Ermittel die länge des Richtungsvektors. 
+		// Die länge ist der Abstand zwischen den beiden Kreis Mittelpukten
 		float distance = distanceVec.length();
-		// Wenn der gerade ermittelte Abstand kleiner ist als die Summer der beiden Radi der Kreise,
-		// liegt eine Kollision vor		
+		// Wenn der gerade ermittelte Abstand kleiner ist als die Summe
+		// der beiden Radien der Kreise, liegt eine Kollision vor		
 		if (distance < objA.getRadius() + objB.getRadius()) {
 			return true;
 		}		
