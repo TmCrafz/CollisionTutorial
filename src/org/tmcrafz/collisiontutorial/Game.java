@@ -7,7 +7,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -71,7 +70,7 @@ public class Game extends AnimationTimer {
 	private float m_fps;
 	
 	CollisionObject m_playersObject;
-	
+	ArrayList<CollisionObject> m_worldObjects;
 	
 	public Game(Scene scene, GraphicsContext graphicsContext, int width, int height) {
 		m_scene = scene;
@@ -121,8 +120,17 @@ public class Game extends AnimationTimer {
 			}
 		});	
 		
+		m_worldObjects = new ArrayList<CollisionObject>();
 		m_playersObject = new Circle(80.f, m_width / 2.f, m_height / 2.f);
+		m_worldObjects.add(new Circle(60.f, m_width / 2.f - 60.f, m_height / 2.f + 120.f));
+		m_worldObjects.add(m_playersObject);
+		
 	}
+	
+	private boolean isColliding(Circle objA, Circle objB) {		
+		
+		return false;
+	} 
 	
 	public void startGame() {
 		startTime = System.nanoTime();
@@ -145,14 +153,26 @@ public class Game extends AnimationTimer {
 		}
 		*/
 		m_playersObject.setPosition(m_mousePos.x, m_mousePos.y);
+		// Check if there is a collision
+		for (CollisionObject objA : m_worldObjects) {
+			for (CollisionObject objB : m_worldObjects) {
+				if (objA instanceof Circle && objB instanceof Circle) {
+					isColliding((Circle) objA, (Circle) objB);
+				}				
+			}	
+		}	
 	}
+	
 	
 	private void render(float dt) {
 		m_graphicsContext.clearRect(0, 0, m_width, m_height);				
-		m_graphicsContext.fillRect(m_rect.getMinX(), m_rect.getMinY(), m_rect.getWidth(), m_rect.getHeight());		
+		//m_graphicsContext.fillRect(m_rect.getMinX(), m_rect.getMinY(), m_rect.getWidth(), m_rect.getHeight());		
 		m_graphicsContext.setFill(Color.RED);
 		m_graphicsContext.setFont(m_font);
-		m_playersObject.draw(m_graphicsContext);
+		
+		for (CollisionObject worldObj : m_worldObjects) {
+			worldObj.draw(m_graphicsContext);
+		}				
 		m_graphicsContext.fillText("DET: " + dt, 10, 10);
 		m_graphicsContext.fillText("FPS: " + m_fps, 10, 20);
 	}
@@ -161,8 +181,8 @@ public class Game extends AnimationTimer {
 	@Override
 	public void handle(long now) {
 		float dt = (float) ((now - startTime) / 1000000000.0 );
-		m_fps = 1.f / dt;                      
 		startTime = System.nanoTime();
+		m_fps = 1.f / dt;                      
 		
 		update(dt);
 		render(dt);
