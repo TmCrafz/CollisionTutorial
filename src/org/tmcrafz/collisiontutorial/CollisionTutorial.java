@@ -1,5 +1,7 @@
 package org.tmcrafz.collisiontutorial;
 
+import org.tmcrafz.collisiontutorial.Game;
+
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -10,8 +12,7 @@ import javafx.stage.Stage;
 public class CollisionTutorial extends Application {	
 	
 	public static void main(String[] args) 
-    {
-		System.out.println("Test");
+    {		
         launch(args);
     }
 	
