@@ -146,7 +146,7 @@ public class Game extends AnimationTimer {
 		m_worldObjects = new ArrayList<CollisionObject>();
 		m_playersObject = new Circle(80.f, m_width / 2.f, m_height / 2.f);
 		m_worldObjects.add(new Circle(60.f, m_width / 2.f - 60.f, m_height / 2.f + 120.f));
-		m_worldObjects.add(new AABB(90.f, 60.f, 60.f , 120.f));
+		m_worldObjects.add(new AABB(90.f, 60.f, 200.f , 220.f));
 		m_worldObjects.add(m_playersObject);		
 	}
 	
@@ -164,6 +164,16 @@ public class Game extends AnimationTimer {
 			return true;
 		}		
 		return false;
+	} 
+	
+	private boolean isColliding(AABB objA, AABB objB) {			
+        if (objA.getBottom() > objB.getTop() &&
+            objA.getTop() <= objB.getBottom() &&
+            objA.getLeft() <= objB.getRight() &&
+            objA.getRight() >= objB.getLeft()) {
+        	return true;
+        }            
+        return false;		
 	} 
 	
 	
@@ -204,7 +214,13 @@ public class Game extends AnimationTimer {
 						m_isCollision = true;
 						System.out.println("Colliding");
 					}
-				}				
+				}
+				else if (objA != objB && objA instanceof AABB && objB instanceof AABB) {
+					if (isColliding((AABB) objA, (AABB) objB)) {
+						m_isCollision = true;
+						System.out.println("Colliding");
+					}
+				}
 			}	
 		}	
 	}
