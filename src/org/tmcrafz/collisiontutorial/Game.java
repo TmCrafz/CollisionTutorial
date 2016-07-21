@@ -167,7 +167,7 @@ public class Game extends AnimationTimer {
 	} 
 	
 	private boolean isColliding(AABB objA, AABB objB) {			
-        if (objA.getBottom() > objB.getTop() &&
+        if (objA.getBottom() >= objB.getTop() &&
             objA.getTop() <= objB.getBottom() &&
             objA.getLeft() <= objB.getRight() &&
             objA.getRight() >= objB.getLeft()) {
