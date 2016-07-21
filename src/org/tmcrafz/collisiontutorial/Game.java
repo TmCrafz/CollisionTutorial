@@ -54,6 +54,30 @@ public class Game extends AnimationTimer {
 		}
 	}
 	
+	static class AABB extends CollisionObject {
+		
+		private float m_width;
+		private float m_height;
+		
+		public AABB(float width, float height, float posX, float posY) {
+			super(posX, posY);
+			m_width = width;
+			m_height = height;
+		}		
+		
+		public float getLeft() { return getPosition().x - m_width / 2.f; }
+		public float getRight() { return getPosition().x + m_width / 2.f; }
+		public float getTop() { return getPosition().y - m_height / 2.f; }
+		public float getBottom() { return getPosition().y + m_height / 2.f; }
+
+		@Override
+		public void draw(GraphicsContext graphicsContext) {
+			graphicsContext.setFill(Color.RED);
+			graphicsContext.fillRect
+				(getLeft(), getTop(), m_width, m_height);
+		}
+	}
+	
 	private Scene m_scene;
 	private GraphicsContext m_graphicsContext;
 	private Font m_font;
