@@ -174,20 +174,25 @@ public class Game extends AnimationTimer {
 	}
 	
 	private void update(float dt) {		
-		/*
-		if (m_input.contains("D")) {
-			m_posX += (m_velX * dt);
+		for (String s : m_input) {
+			System.out.println("Input: " + s);
 		}
-		if (m_input.contains("A")) {
-			m_posX -= (m_velX * dt);
+		
+		
+		if (m_input.contains("DIGIT1")) {
+			// Make circle to player object
+			m_worldObjects.remove(m_playersObject);
+			m_playersObject = new Circle(80.f, m_mousePos.x, m_mousePos.y);
+			m_worldObjects.add(m_playersObject);
 		}
-		if (m_input.contains("W")) {
-			m_posY -= (m_velY * dt);
+		if (m_input.contains("DIGIT2")) {
+			m_worldObjects.remove(m_playersObject);
+			// Make AABB to player object
+			m_playersObject = new AABB(90.f, 60.f, m_mousePos.x , m_mousePos.y);
+			m_worldObjects.add(m_playersObject);
 		}
-		if (m_input.contains("S")) {
-			m_posY += (m_velY * dt);
-		}
-		*/
+		
+		
 		m_playersObject.setPosition(m_mousePos.x, m_mousePos.y);
 		// Prüfe ob eine Kollision statt findet
 		m_isCollision = false;
